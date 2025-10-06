@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>🎨 ToonBelly Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container { 
+            max-width: 100%; 
+            margin: 0; 
+            padding: 10px;
+        }
+        
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        h1 { 
+            color: white; 
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        
+        .card { 
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group { 
+            margin-bottom: 15px;
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.8);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        
+        button { 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; 
+            padding: 12px 20px;
+            border: none; 
+            border-radius: 12px;
+            cursor: pointer; 
+            margin: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66, #40c057);
+            box-shadow: 0 4px 15px rgba(81,207,102,0.3);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffd43b, #fab005);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(255,212,59,0.3);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #339af0, #228be6);
+            box-shadow: 0 4px 15px rgba(51,154,240,0.3);
+        }
+        
+        .success { 
+            color: #2b8a3e; 
+            background: linear-gradient(135deg, #d3f9d8, #b2f2bb);
+            border: 1px solid #8ce99a;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .error { 
+            color: #c92a2a; 
+            background: linear-gradient(135deg, #ffe0e6, #ffc9da);
+            border: 1px solid #ffa8a8;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .info { 
+            color: #1864ab; 
+            background: linear-gradient(135deg, #d0ebff, #a5d8ff);
+            border: 1px solid #74c0fc;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .video-list { 
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+        }
+        
+        .video-item { 
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        
+        .progress { 
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            height: 8px;
+        }
+        
+        .progress-bar { 
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 15px;
+        }
+        
+        .tip {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 5px;
+        }
+        
+        .conversion-msg {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .container { padding: 5px; }
+            .card { padding: 15px; margin: 10px 0; }
+            h1 { font-size: 1.5rem; }
+            button { padding: 10px 15px; font-size: 0.85rem; }
+            input, select, textarea { font-size: 16px; padding: 10px 12px; }
+        }
+        
+        /* Scrollbar Styling */
+        .video-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .video-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .video-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 ToonBelly Admin</h1>
+            <div class="subtitle">Content Management System</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📁 Add Category</div>
+            <div class="form-group">
+                <label>Category Name:</label>
+                <input type="text" id="newCategoryName" placeholder="e.g., Motu Patlu">
+            </div>
+            <div class="form-group">
+                <label>Category Image URL (or YouTube Video ID):</label>
+                <input type="text" id="categoryImageUrl" placeholder="https://example.com/image.jpg or r8B5rb2UI5I" oninput="convertToImageUrl(this)">
+                <div class="tip">💡 Tip: Enter just YouTube video ID (e.g., r8B5rb2UI5I) and it will auto-convert to thumbnail URL</div>
+            </div>
+            <div class="form-group">
+                <label>Display Order (1=Top):</label>
+                <input type="number" id="categoryOrder" placeholder="1" min="1" value="1">
+            </div>
+            <button onclick="addCategory()">✨ Add Category</button>
+            <div id="categoryStatus"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎥 Add YouTube Playlist</div>
+            <div class="form-group">
+                <label>Select Category:</label>
+                <select id="categoryName">
+                    <option value="">Loading categories...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>YouTube Playlist URL:</label>
+                <input type="text" id="playlistUrl" placeholder="https://www.youtube.com/playlist?list=..." value="https://www.youtube.com/playlist?list=PL2XOPpYaVR4-Dn84fWdjBQO6Tcf2DORTp">
+            </div>
+            <button onclick="extractPlaylist()">🚀 Extract Videos</button>
+            <div id="extractStatus"></div>
+            <div id="progressContainer" style="display: none;">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div id="progressText">Processing...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎦 Add Single Video</div>
+            <div class="form-group">
+                <label>Select Category:</label>
+                <select id="singleCategory">
+                    <option value="">Loading categories...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>YouTube Video URL:</label>
+                <input type="text" id="singleVideoUrl" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=JsGNdu1rMYE">
+            </div>
+            <button onclick="addSingleVideo()">➕ Add Video</button>
+            <div id="singleVideoStatus"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📺 Current Videos</div>
+            <button onclick="loadVideos()" class="btn-info">🔄 Refresh List</button>
+            <button onclick="clearAllVideos()" class="btn-danger">🗑️ Clear All</button>
+            <div id="videosList" class="video-list"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, push, onValue, remove, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7_SBiyMSN8HPi-oIGyFX7RoCKkd3-NmU",
+            authDomain: "toonbelly-f7881.firebaseapp.com",
+            databaseURL: "https://toonbelly-f7881-default-rtdb.firebaseio.com/",
+            projectId: "toonbelly-f7881"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const YOUTUBE_API_KEY = 'AIzaSyD12wYSNog79Ifn2dQTqCtnqQreazxPx78';
+        
+        // Load categories on page load
+        loadCategoriesDropdown();
+
+        window.extractPlaylist = async function() {
+            const categoryName = document.getElementById('categoryName').value;
+            const playlistUrl = document.getElementById('playlistUrl').value;
+            const status = document.getElementById('extractStatus');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            if (!categoryName || !playlistUrl) {
+                status.innerHTML = '<div class="error">Please fill all fields</div>';
+                return;
+            }
+
+            const playlistId = extractPlaylistId(playlistUrl);
+            if (!playlistId) {
+                status.innerHTML = '<div class="error">Invalid playlist URL</div>';
+                return;
+            }
+
+            status.innerHTML = '<div class="info">Starting playlist extraction...</div>';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            
+            try {
+                const videos = await fetchPlaylistVideos(playlistId, categoryName, (current, total) => {
+                    const percent = (current / total) * 100;
+                    progressBar.style.width = percent + '%';
+                    progressText.textContent = `Processing ${current}/${total} videos...`;
+                });
+                
+                await saveVideosToFirebase(videos);
+                status.innerHTML = `<div class="success">Successfully added ${videos.length} videos!</div>`;
+                progressContainer.style.display = 'none';
+                loadVideos();
+            } catch (error) {
+                status.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                progressContainer.style.display = 'none';
+            }
+        };
+
+        window.addSingleVideo = async function() {
+            const category = document.getElementById('singleCategory').value;
+            const videoUrl = document.getElementById('singleVideoUrl').value;
+            const status = document.getElementById('singleVideoStatus');
+            
+            if (!category || !videoUrl) {
+                status.innerHTML = '<div class="error">Please fill all fields</div>';
+                return;
+            }
+
+            const videoId = extractVideoId(videoUrl);
+            if (!videoId) {
+                status.innerHTML = '<div class="error">Invalid video URL</div>';
+                return;
+            }
+
+            status.innerHTML = '<div class="info">Adding video...</div>';
+            
+            try {
+                const videoData = await fetchVideoDetails(videoId, category);
+                await saveVideoToFirebase(videoData);
+                status.innerHTML = '<div class="success">Video added successfully!</div>';
+                loadVideos();
+            } catch (error) {
+                status.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+
+        window.loadVideos = function() {
+            const videosList = document.getElementById('videosList');
+            const categoriesRef = ref(database, 'categories');
+            
+            onValue(categoriesRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    displayCategories(data);
+                } else {
+                    videosList.innerHTML = '<div>No categories found</div>';
+                }
+            });
+        };
+
+        window.clearAllVideos = async function() {
+            if (confirm('Are you sure you want to delete all categories and videos?')) {
+                const categoriesRef = ref(database, 'categories');
+                await remove(categoriesRef);
+                loadVideos();
+            }
+        };
+
+        function extractPlaylistId(url) {
+            const match = url.match(/[?&]list=([^&]+)/);
+            return match ? match[1] : null;
+        }
+
+        function extractVideoId(url) {
+            const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+            return match ? match[1] : null;
+        }
+
+        async function fetchPlaylistVideos(playlistId, category, progressCallback) {
+            let nextPageToken = '';
+            let allItems = [];
+            
+            // First, get all playlist items
+            do {
+                const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&pageToken=${nextPageToken}&key=${YOUTUBE_API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (!response.ok) throw new Error(data.error?.message || 'Failed to fetch playlist');
+                
+                allItems = allItems.concat(data.items || []);
+                nextPageToken = data.nextPageToken || '';
+            } while (nextPageToken);
+            
+            const videos = [];
+            const total = allItems.length;
+            
+            for (let i = 0; i < allItems.length; i++) {
+                const item = allItems[i];
+                progressCallback(i + 1, total);
+                
+                try {
+                    if (item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId) {
+                        const videoId = item.snippet.resourceId.videoId;
+                        
+                        // Check if video is accessible
+                        const videoResponse = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`);
+                        const videoData = await videoResponse.json();
+                        
+                        if (videoResponse.ok && videoData.items && videoData.items.length > 0) {
+                            const video = videoData.items[0];
+                            if (video.snippet) {
+                                const videoDetails = {
+                                    id: Date.now() + Math.random() * 1000000 + i, // More unique ID
+                                    category: category,
+                                    title: video.snippet.title || 'Untitled',
+                                    youtubeLink: videoId,
+                                    thumbnailUrl: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.default?.url || '',
+                                    description: getShortDescription(video.snippet.description),
+                                    views: parseInt(video.statistics?.viewCount) || 0,
+                                    uploadDate: video.snippet.publishedAt ? new Date(video.snippet.publishedAt).toLocaleDateString('en-US', { 
+                                        year: 'numeric', month: 'long', day: 'numeric' 
+                                    }) : 'Unknown'
+                                };
+                                videos.push(videoDetails);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Skipping video ${i + 1}: ${error.message}`);
+                }
+                
+                // Small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            return videos;
+        }
+
+        function getShortDescription(fullDescription) {
+            if (!fullDescription) return 'No description available';
+            
+            // Remove common promotional text
+            let cleanDesc = fullDescription
+                .replace(/-------[\s\S]*$/g, '') // Remove everything after -------
+                .replace(/Explore the ultimate collection[\s\S]*$/gi, '') // Remove promotional text
+                .replace(/Tap here to[\s\S]*$/gi, '') // Remove tap here text
+                .replace(/Watch more[\s\S]*$/gi, '') // Remove watch more text
+                .replace(/Subscribe[\s\S]*$/gi, '') // Remove subscribe text
+                .trim();
+            
+            // Split by sentences and take first 1-2 sentences only
+            const sentences = cleanDesc.split(/[.!?]+/);
+            let shortDesc = '';
+            let sentenceCount = 0;
+            
+            for (let sentence of sentences) {
+                sentence = sentence.trim();
+                if (sentence && sentenceCount < 1) { // Only 1 sentence
+                    shortDesc += sentence + '. ';
+                    sentenceCount++;
+                }
+                if (shortDesc.length > 80) break; // Reduced to 80 chars
+            }
+            
+            // If still too long, cut at 80 chars
+            if (shortDesc.length > 80) {
+                shortDesc = shortDesc.substring(0, 80) + '...';
+            }
+            
+            return shortDesc || 'No description available';
+        }
+
+        async function fetchVideoDetails(videoId, category) {
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`);
+            const data = await response.json();
+            
+            if (!response.ok) throw new Error(data.error?.message || 'Failed to fetch video');
+            
+            if (!data.items || data.items.length === 0) {
+                throw new Error('Video not found or private');
+            }
+            
+            const video = data.items[0];
+            if (!video.snippet) {
+                throw new Error('Video snippet not available');
+            }
+            
+            return {
+                id: Date.now() + Math.random() * 1000000, // More unique ID
+                category: category,
+                title: video.snippet.title || 'Untitled',
+                youtubeLink: videoId,
+                thumbnailUrl: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.default?.url || '',
+                description: getShortDescription(video.snippet.description),
+                views: parseInt(video.statistics?.viewCount) || 0,
+                uploadDate: video.snippet.publishedAt ? new Date(video.snippet.publishedAt).toLocaleDateString('en-US', { 
+                    year: 'numeric', month: 'long', day: 'numeric' 
+                }) : 'Unknown'
+            };
+        }
+
+        window.addCategory = async function() {
+            const name = document.getElementById('newCategoryName').value;
+            let imageUrl = document.getElementById('categoryImageUrl').value.trim();
+            const order = parseInt(document.getElementById('categoryOrder').value) || 1;
+            const status = document.getElementById('categoryStatus');
+            
+            if (!name || !imageUrl) {
+                status.innerHTML = '<div class="error">Please fill name and image URL</div>';
+                return;
+            }
+            
+            // Auto-convert YouTube video ID to thumbnail URL
+            if (imageUrl.length === 11 && /^[a-zA-Z0-9_-]+$/.test(imageUrl)) {
+                imageUrl = `https://i.ytimg.com/vi/${imageUrl}/hqdefault.jpg`;
+            }
+            
+            try {
+                const categoryInfo = {
+                    name: name,
+                    imageUrl: imageUrl,
+                    description: '',
+                    folderPath: name.toLowerCase().replace(/ /g, '_'),
+                    videoCount: 0,
+                    order: order
+                };
+                
+                const categoryRef = ref(database, `categories/${name}/info`);
+                await set(categoryRef, categoryInfo);
+                
+                status.innerHTML = '<div class="success">Category added successfully!</div>';
+                document.getElementById('newCategoryName').value = '';
+                document.getElementById('categoryImageUrl').value = '';
+                document.getElementById('categoryOrder').value = '1';
+                
+                loadCategoriesDropdown();
+                loadVideos();
+            } catch (error) {
+                status.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+        
+        function loadCategoriesDropdown() {
+            const categoriesRef = ref(database, 'categories');
+            onValue(categoriesRef, (snapshot) => {
+                const data = snapshot.val();
+                const categorySelect = document.getElementById('categoryName');
+                const singleCategorySelect = document.getElementById('singleCategory');
+                
+                // Clear existing options
+                categorySelect.innerHTML = '<option value="">Select Category</option>';
+                singleCategorySelect.innerHTML = '<option value="">Select Category</option>';
+                
+                if (data) {
+                    Object.keys(data).forEach(categoryName => {
+                        const option1 = document.createElement('option');
+                        option1.value = categoryName;
+                        option1.textContent = categoryName;
+                        categorySelect.appendChild(option1);
+                        
+                        const option2 = document.createElement('option');
+                        option2.value = categoryName;
+                        option2.textContent = categoryName;
+                        singleCategorySelect.appendChild(option2);
+                    });
+                }
+            });
+        }
+
+        async function saveVideosToFirebase(videos) {
+            for (const video of videos) {
+                // Check if video already exists
+                const existingVideos = await checkExistingVideo(video.category, video.youtubeLink);
+                if (!existingVideos) {
+                    const categoryRef = ref(database, `categories/${video.category}/videos`);
+                    await push(categoryRef, video);
+                }
+            }
+        }
+
+        async function saveVideoToFirebase(video) {
+            // Check if video already exists
+            const existingVideos = await checkExistingVideo(video.category, video.youtubeLink);
+            if (!existingVideos) {
+                const categoryRef = ref(database, `categories/${video.category}/videos`);
+                await push(categoryRef, video);
+            } else {
+                throw new Error('Video already exists in this category!');
+            }
+        }
+        
+        async function checkExistingVideo(category, youtubeLink) {
+            try {
+                const categoryVideosRef = ref(database, `categories/${category}/videos`);
+                const snapshot = await get(categoryVideosRef);
+                const videos = snapshot.val();
+                
+                if (videos) {
+                    for (const [key, video] of Object.entries(videos)) {
+                        if (video.youtubeLink === youtubeLink) {
+                            return true; // Video exists
+                        }
+                    }
+                }
+                return false; // Video doesn't exist
+            } catch (error) {
+                console.error('Error checking existing video:', error);
+                return false;
+            }
+        }
+
+        function displayCategories(categoriesData) {
+            const videosList = document.getElementById('videosList');
+            const categories = Object.keys(categoriesData);
+            
+            // Sort categories by order
+            categories.sort((a, b) => {
+                const orderA = categoriesData[a].info?.order || 999;
+                const orderB = categoriesData[b].info?.order || 999;
+                return orderA - orderB;
+            });
+            
+            videosList.innerHTML = `<p><strong>Total Categories: ${categories.length}</strong></p>` + 
+                categories.map((categoryName, index) => {
+                    const categoryData = categoriesData[categoryName];
+                    const categoryInfo = categoryData.info || {};
+                    const videoCount = categoryData.videos ? Object.keys(categoryData.videos).length : 0;
+                    
+                    return `
+                    <div class="video-item" style="cursor: pointer; border: 2px solid #667eea; position: relative;" onclick="toggleCategory('${categoryName}')">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${categoryInfo.imageUrl || 'https://via.placeholder.com/50x50?text=No+Image'}" 
+                                 style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;" 
+                                 onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'">
+                            <div style="flex: 1;">
+                                <strong>📁 ${categoryName}</strong> 
+                                <span style="color: #666;">(${videoCount} videos)</span>
+                                <span style="background: #667eea; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-left: 5px;">Order: ${categoryInfo.order || 999}</span><br>
+                                <small>Click to expand/collapse videos</small>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <button onclick="moveCategory('${categoryName}', 'up'); event.stopPropagation();" 
+                                        class="btn-success" style="padding: 6px 10px; font-size: 11px; margin: 2px;">⬆️</button>
+                                <button onclick="moveCategory('${categoryName}', 'down'); event.stopPropagation();" 
+                                        class="btn-warning" style="padding: 6px 10px; font-size: 11px; margin: 2px;">⬇️</button>
+                                <button onclick="editCategory('${categoryName}'); event.stopPropagation();" 
+                                        class="btn-info" style="padding: 6px 10px; font-size: 11px; margin: 2px;">✏️</button>
+                                <button onclick="deleteCategory('${categoryName}'); event.stopPropagation();" 
+                                        class="btn-danger" style="padding: 6px 10px; font-size: 11px; margin: 2px;">🗑️</button>
+                            </div>
+                        </div>
+                        <div id="category-${categoryName}" style="display: none; margin-top: 10px; padding-left: 20px;">
+                            ${categoryData.videos ? Object.entries(categoryData.videos).map(([key, video]) => `
+                                <div style="border: 1px solid #ddd; padding: 8px; margin: 3px 0; border-radius: 3px; background: #f9f9f9;">
+                                    <strong>${video.title}</strong><br>
+                                    <small style="color: #666;">${video.description}</small><br>
+                                    <small>Views: ${video.views?.toLocaleString()} | Date: ${video.uploadDate}</small><br>
+                                    <button onclick="editVideo('${categoryName}', '${key}'); event.stopPropagation();" 
+                                            class="btn-info" style="padding: 5px 8px; font-size: 10px; margin: 2px;">✏️ Edit</button>
+                                    <button onclick="deleteVideo('${categoryName}', '${key}'); event.stopPropagation();" 
+                                            class="btn-danger" style="padding: 5px 8px; font-size: 10px; margin: 2px;">🗑️ Delete</button>
+                                </div>
+                            `).join('') : '<div>No videos</div>'}
+                        </div>
+                    </div>
+                `;
+                }).join('');
+        }
+        
+        window.moveCategory = async function(categoryName, direction) {
+            try {
+                const categoriesRef = ref(database, 'categories');
+                const snapshot = await get(categoriesRef);
+                const categoriesData = snapshot.val();
+                
+                if (!categoriesData) return;
+                
+                const currentOrder = categoriesData[categoryName].info?.order || 999;
+                let newOrder;
+                
+                if (direction === 'up') {
+                    newOrder = Math.max(1, currentOrder - 1);
+                } else {
+                    newOrder = currentOrder + 1;
+                }
+                
+                // Update category order
+                const categoryInfoRef = ref(database, `categories/${categoryName}/info/order`);
+                await set(categoryInfoRef, newOrder);
+                
+                loadVideos();
+            } catch (error) {
+                console.error('Error moving category:', error);
+            }
+        };
+        
+        window.toggleCategory = function(categoryName) {
+            const categoryDiv = document.getElementById(`category-${categoryName}`);
+            if (categoryDiv.style.display === 'none') {
+                categoryDiv.style.display = 'block';
+            } else {
+                categoryDiv.style.display = 'none';
+            }
+        };
+
+        window.deleteVideo = async function(categoryName, videoKey) {
+            if (confirm('Delete this video?')) {
+                const videoRef = ref(database, `categories/${categoryName}/videos/${videoKey}`);
+                await remove(videoRef);
+                loadVideos();
+            }
+        };
+        
+        window.editCategory = async function(categoryName) {
+            const categoriesRef = ref(database, 'categories');
+            const snapshot = await get(categoriesRef);
+            const categoriesData = snapshot.val();
+            
+            if (!categoriesData || !categoriesData[categoryName]) return;
+            
+            const categoryInfo = categoriesData[categoryName].info || {};
+            
+            const newName = prompt('Category Name:', categoryInfo.name || categoryName);
+            if (newName === null) return;
+            
+            let newImageUrl = prompt('Image URL (or YouTube Video ID):', categoryInfo.imageUrl || '');
+            if (newImageUrl === null) return;
+            
+            // Auto-convert YouTube video ID to thumbnail URL
+            newImageUrl = newImageUrl.trim();
+            if (newImageUrl.length === 11 && /^[a-zA-Z0-9_-]+$/.test(newImageUrl)) {
+                newImageUrl = `https://i.ytimg.com/vi/${newImageUrl}/hqdefault.jpg`;
+            }
+            
+            const newOrder = prompt('Display Order:', categoryInfo.order || 1);
+            if (newOrder === null) return;
+            
+            try {
+                if (newName !== categoryName) {
+                    // If name changed, create new category and move videos
+                    const newCategoryInfo = {
+                        name: newName,
+                        imageUrl: newImageUrl,
+                        description: categoryInfo.description || '',
+                        folderPath: newName.toLowerCase().replace(/ /g, '_'),
+                        videoCount: categoryInfo.videoCount || 0,
+                        order: parseInt(newOrder)
+                    };
+                    
+                    // Create new category
+                    await set(ref(database, `categories/${newName}/info`), newCategoryInfo);
+                    
+                    // Move videos if any
+                    if (categoriesData[categoryName].videos) {
+                        const videos = categoriesData[categoryName].videos;
+                        for (const [videoKey, videoData] of Object.entries(videos)) {
+                            videoData.category = newName;
+                            await set(ref(database, `categories/${newName}/videos/${videoKey}`), videoData);
+                        }
+                    }
+                    
+                    // Delete old category
+                    await remove(ref(database, `categories/${categoryName}`));
+                } else {
+                    // Just update existing category info
+                    const updatedInfo = {
+                        ...categoryInfo,
+                        name: newName,
+                        imageUrl: newImageUrl,
+                        order: parseInt(newOrder)
+                    };
+                    await set(ref(database, `categories/${categoryName}/info`), updatedInfo);
+                }
+                
+                loadVideos();
+                loadCategoriesDropdown();
+            } catch (error) {
+                alert('Error updating category: ' + error.message);
+            }
+        };
+        
+        window.deleteCategory = async function(categoryName) {
+            if (confirm(`Delete entire category '${categoryName}' and all its videos?`)) {
+                const categoryRef = ref(database, `categories/${categoryName}`);
+                await remove(categoryRef);
+                loadVideos();
+            }
+        };
+        
+        window.editVideo = async function(categoryName, videoKey) {
+            try {
+                // First get current video data
+                const videoRef = ref(database, `categories/${categoryName}/videos/${videoKey}`);
+                const snapshot = await get(videoRef);
+                const videoData = snapshot.val();
+                
+                if (!videoData) {
+                    alert('Video not found!');
+                    return;
+                }
+                
+                const newTitle = prompt('Video Title:', videoData.title || '');
+                if (newTitle === null) return;
+                
+                const newDescription = prompt('Video Description:', videoData.description || '');
+                if (newDescription === null) return;
+                
+                // Update video data
+                videoData.title = newTitle;
+                videoData.description = newDescription;
+                await set(videoRef, videoData);
+                
+                loadVideos();
+                alert('Video updated successfully!');
+            } catch (error) {
+                alert('Error updating video: ' + error.message);
+            }
+        };
+
+        // Function to convert YouTube video ID to thumbnail URL
+        window.convertToImageUrl = function(input) {
+            const value = input.value.trim();
+            
+            // Check if it's a YouTube video ID (11 characters, alphanumeric)
+            if (value.length === 11 && /^[a-zA-Z0-9_-]+$/.test(value) && !value.startsWith('http')) {
+                const thumbnailUrl = `https://i.ytimg.com/vi/${value}/hqdefault.jpg`;
+                input.value = thumbnailUrl;
+                input.style.color = '#28a745'; // Green color to show conversion
+                input.style.fontWeight = 'bold';
+                
+                // Show conversion message
+                const parent = input.parentElement;
+                let msg = parent.querySelector('.conversion-msg');
+                if (!msg) {
+                    msg = document.createElement('div');
+                    msg.className = 'conversion-msg';
+                    msg.style.cssText = 'color: #28a745; font-size: 12px; margin-top: 5px;';
+                    parent.appendChild(msg);
+                }
+                msg.textContent = '✅ Converted to YouTube thumbnail URL!';
+                
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    input.style.color = '';
+                    input.style.fontWeight = '';
+                    if (msg) msg.remove();
+                }, 3000);
+            }
+        };
+        
+        // Load videos on page load
+        loadVideos();
+    </script>
+</body>
+</html>
